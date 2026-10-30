@@ -27,10 +27,20 @@ export default async (request)=>{
   const candles=payload.values.map(v=>({time:v.datetime,open:Number(v.open),high:Number(v.high),low:Number(v.low),close:Number(v.close)})).filter(v=>[v.open,v.high,v.low,v.close].every(Number.isFinite)).reverse();
   if(candles.length<30)return new Response(JSON.stringify({error:"Not enough candles to calculate indicators."}),{status:502,headers});
   const closes=candles.map(v=>v.close),last=closes.at(-1),fast=ema(closes,9),slow=ema(closes,21),momentum=rsi(closes,14),vol=atr(candles);
-  const up=fast>slow,down=fast<slow;let signal="WAIT",reason="Conditions are mixed. Wait for a clearer setup.",strength=35;
-  if(up&&momentum>=50&&momentum<=70){signal="BUY";reason="EMA 9 is above EMA 21 and RSI confirms positive momentum.";strength=Math.min(95,60+Math.round((momentum-50)*1.1));}
-  else if(down&&momentum>=30&&momentum<=50){signal="SELL";reason="EMA 9 is below EMA 21 and RSI confirms negative momentum.";strength=Math.min(95,60+Math.round((50-momentum)*1.1));}
-  else strength=Math.min(55,25+Math.round(Math.abs(momentum-50)*.6));
+  const up=fast>slow,down=fast<slow,lastCandle=candles.at(-1);
+  const bullishCandle=lastCandle.close>lastCandle.open;
+  const bearishCandle=lastCandle.close<lastCandle.open;
+  const emaGapAtr=vol>0?Math.abs(fast-slow)/vol:0;
+  const gapScore=Math.min(15,Math.round(emaGapAtr*30));
+  let signal="WAIT",reason="Conditions are mixed or the setup is not strong enough. Wait for confirmation.",strength=35;
+  if(up&&momentum>=52&&momentum<=68&&bullishCandle&&emaGapAtr>=0.08){
+   strength=Math.min(95,70+20+gapScore);
+   if(strength>=80){signal="BUY";reason="BUY confirmed: EMA trend, RSI momentum, ATR-normalized EMA separation and bullish candle agree.";}
+  } else if(down&&momentum>=32&&momentum<=48&&bearishCandle&&emaGapAtr>=0.08){
+   strength=Math.min(95,70+20+gapScore);
+   if(strength>=80){signal="SELL";reason="SELL confirmed: EMA trend, RSI momentum, ATR-normalized EMA separation and bearish candle agree.";}
+  }
+  if(signal==="WAIT")strength=Math.min(69,Math.max(25,35+gapScore+Math.round(Math.abs(momentum-50)*0.5)));
   let tradePlan=null;
   if(signal!=="WAIT"&&vol>0){
    const risk=vol*1.5,dir=signal==="BUY"?1:-1;
