@@ -72,6 +72,38 @@
       <div class="bottom-card"><div class="bottom-head"><span class="overline">SIGNAL LOG</span><span class="log-count" id="logCount">0 entries</span></div><div id="logList" class="log-list"><span class="empty-log">Your recent analyses will appear here.</span></div></div>
       <div class="bottom-card telegram-card"><div class="bottom-head"><span class="overline">COMMUNITY</span><span class="mini-icon">↗</span></div><strong>Trade with a plan.</strong><small>Add your Telegram channel link in <code>app.js</code>.</small><a id="telegramLink" href="#" target="_blank" rel="noopener">JOIN TELEGRAM <span>↗</span></a></div>
     </section>
+
+    <section class="upgrade-grid">
+      <div class="bottom-card">
+        <div class="bottom-head"><span class="overline">04 / TRADE PLAN</span><span class="feed-badge">RISK LEVELS</span></div>
+        <div class="trade-levels">
+          <div><small>ENTRY</small><strong id="entryPrice">—</strong></div>
+          <div><small>STOP LOSS</small><strong id="stopLoss">—</strong></div>
+          <div><small>TAKE PROFIT 1</small><strong id="takeProfit1">—</strong></div>
+          <div><small>TAKE PROFIT 2</small><strong id="takeProfit2">—</strong></div>
+          <div><small>TAKE PROFIT 3</small><strong id="takeProfit3">—</strong></div>
+          <div><small>RISK / REWARD</small><strong id="riskReward">—</strong></div>
+        </div>
+        <button id="telegramAlertBtn" class="secondary-btn" disabled>SEND SIGNAL TO TELEGRAM ↗</button>
+        <small id="telegramStatus">Configure Telegram credentials in Netlify to enable alerts.</small>
+      </div>
+      <div class="bottom-card">
+        <div class="bottom-head"><span class="overline">05 / PERFORMANCE</span><span class="feed-badge">15-MIN CHECK</span></div>
+        <div class="accuracy-summary">
+          <div><small>WIN RATE</small><strong id="winRate">—</strong></div>
+          <div><small>WINS</small><strong id="wins">0</strong></div>
+          <div><small>LOSSES</small><strong id="losses">0</strong></div>
+          <div><small>RESOLVED</small><strong id="resolved">0</strong></div>
+        </div>
+        <div class="accuracy-track"><span id="accuracyFill"></span></div>
+        <small id="accuracyNote">Signals are evaluated after 15 minutes using observed price direction.</small>
+      </div>
+      <div class="bottom-card">
+        <div class="bottom-head"><span class="overline">06 / SIGNAL HISTORY</span><button id="clearHistoryBtn" class="text-btn">CLEAR</button></div>
+        <div id="historyList" class="history-list"><span class="empty-log">No saved signals yet.</span></div>
+      </div>
+    </section>
+
     <footer><span>VANTAGE AI <b>•</b> MARKET ANALYSIS TERMINAL</span><span>DATA MAY BE DELAYED DEPENDING ON YOUR PROVIDER PLAN</span></footer>
   </main>
   <script src="/app.js"></script>

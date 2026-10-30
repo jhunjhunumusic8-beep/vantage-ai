@@ -11,3 +11,21 @@
 .bottom-grid{display:grid;grid-template-columns:.85fr 1.3fr .85fr;gap:15px;margin-top:15px}.bottom-card{padding:17px 18px;min-height:105px}.feed-badge{display:flex;align-items:center;gap:6px;font-size:8px;color:#91a0b4}.feed-badge i{width:5px;height:5px;background:#788596;box-shadow:none}.bottom-card>strong{display:block;font:600 16px "Space Grotesk";margin:12px 0 3px}.bottom-card>small{font-size:9px;color:#8491a4}.log-count{font-size:9px;color:#8491a4}.log-list{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.empty-log{font-size:10px;color:#7e8b9d}.log-chip{font-size:9px;padding:6px 8px;border-radius:7px;background:#ffffff08;color:#b6c3d2}.log-chip.buy{color:var(--green)}.log-chip.sell{color:var(--red)}.telegram-card a{display:inline-block;margin-top:11px;text-decoration:none;color:var(--cyan);font-size:9px;font-weight:800;letter-spacing:1px}.telegram-card a span{margin-left:5px}code{color:#c1d1e3;font-size:9px}footer{display:flex;justify-content:space-between;gap:15px;margin-top:24px;color:#637084;font-size:8px;letter-spacing:1.1px}footer b{color:var(--cyan);padding:0 5px}
 @media(max-width:900px){.dashboard{grid-template-columns:1fr 1.2fr}.side-panel{grid-column:1/-1}.side-panel{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.side-title,.disclaimer{grid-column:1/-1}.note-row{margin-top:5px}.disclaimer{margin-top:5px}.bottom-grid{grid-template-columns:1fr 1fr}.telegram-card{grid-column:1/-1}}
 @media(max-width:620px){.shell{padding:18px 15px}.topbar{padding-bottom:17px}.top-right{font-size:8px;gap:6px}.brand-mark{width:36px;height:36px}.hero{padding:35px 0 25px}.hero p{font-size:12px;line-height:1.5}.dashboard{grid-template-columns:1fr}.side-panel{grid-column:auto;display:block}.note-row{margin-top:16px}.disclaimer{margin-top:16px}.control-panel,.signal-panel{padding:19px}.signal-main{padding:18px 0}.bottom-grid{grid-template-columns:1fr}.telegram-card{grid-column:auto}.bottom-card{min-height:95px}footer{flex-direction:column;font-size:7px;margin-top:20px}.signal-word{font-size:35px}}
+
+.upgrade-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:18px}
+.trade-levels,.accuracy-summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:18px 0}
+.trade-levels>div,.accuracy-summary>div{display:flex;flex-direction:column;gap:5px;padding:12px;border:1px solid rgba(130,160,190,.14);border-radius:12px;background:rgba(255,255,255,.025)}
+.trade-levels small,.accuracy-summary small{font-size:9px;letter-spacing:1.2px;color:#8795a8;font-weight:800}
+.trade-levels strong,.accuracy-summary strong{font-size:15px;color:#eef4fb}
+.accuracy-summary strong{font-size:23px}
+.accuracy-track{height:7px;border-radius:8px;background:#27313e;overflow:hidden;margin:10px 0 14px}
+.accuracy-track span{display:block;height:100%;width:0;background:linear-gradient(90deg,#13c5d9,#41dfa0);transition:width .3s}
+.secondary-btn{width:100%;border:1px solid rgba(28,204,221,.45);border-radius:10px;padding:13px;background:rgba(16,194,215,.12);color:#55ddec;font-weight:800;cursor:pointer;margin:4px 0 10px}
+.secondary-btn:disabled{opacity:.45;cursor:not-allowed}
+.text-btn{border:0;background:none;color:#8e9bae;font-size:10px;font-weight:800;letter-spacing:1px;cursor:pointer}
+.history-list{display:flex;flex-direction:column;gap:9px;max-height:230px;overflow:auto;margin-top:14px}
+.history-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px;border:1px solid rgba(130,160,190,.13);border-radius:10px}
+.history-row>div{display:flex;flex-direction:column;gap:4px}.history-row span{font-size:10px;color:#8d9aac}
+.history-row strong{font-size:10px;color:#aeb9c7}.history-row b{font-size:11px}.history-row b.buy{color:#40e0a0}.history-row b.sell{color:#ff7188}
+@media(max-width:900px){.upgrade-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:620px){.upgrade-grid{grid-template-columns:1fr}.trade-levels{grid-template-columns:repeat(2,minmax(0,1fr))}}
