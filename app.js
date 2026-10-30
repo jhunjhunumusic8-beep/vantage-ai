@@ -60,17 +60,120 @@ async function resolveMatured(){
   }
   if(changed){saveHistory(items);renderHistory();}
 }
+
 async function analyze(){
-  if(busy)return; busy=true; scanBtn.disabled=true; scanBtn.querySelector("strong").textContent="ANALYZING...";
-  $("status").textContent="FETCHING DATA"; $("hint").textContent="Requesting latest 1-minute market candles…";
-  try{
-    const response=await fetch(`/.netlify/functions/signal?symbol=${encodeURIComponent(asset.value)}`);
-    const data=await response.json(); if(!response.ok) throw new Error(data.error||"Unable to retrieve market data.");
-    setSignal(data.signal,data);
-    if(data.signal==="BUY"||data.signal==="SELL"){
-      const items=readHistory(); items.unshift({id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),symbol:data.symbol,signal:data.signal,entry:Number(data.price),createdAt:Date.now(),outcome:null});
-      saveHistory(items); renderHistory();
+  if(busy) return;
+
+  busy = true;
+  scanBtn.disabled = true;
+  scanBtn.querySelector("strong").textContent = "ANALYZING...";
+  $("status").textContent = "FETCHING DATA";
+  $("hint").textContent = "Requesting latest 1-minute market candles…";
+
+  try {
+    const response = await fetch(
+      `/.netlify/functions/signal?symbol=${encodeURIComponent(asset.value)}`
+    );
+
+    const data = await response.json();
+
+    if(!response.ok) {
+      throw new Error(data.error || "Unable to retrieve market data.");
     }
+
+    setSignal(data.signal, data);
+
+    const symbol = data.symbol;
+    const signal = data.signal;
+
+    let observed = {};
+    let alerted = {};
+
+    try {
+      observed = JSON.parse(localStorage.getItem("vantage_observed_signals") || "{}");
+      alerted = JSON.parse(localStorage.getItem("vantage_alerted_signals") || "{}");
+    } catch {}
+
+    const isNewSignal =
+      (signal === "BUY" || signal === "SELL") &&
+      observed[symbol] !== signal;
+
+    observed[symbol] = signal;
+    localStorage.setItem("vantage_observed_signals", JSON.stringify(observed));
+
+    if(signal === "WAIT") {
+      delete alerted[symbol];
+      localStorage.setItem("vantage_alerted_signals", JSON.stringify(alerted));
+    }
+
+    if(isNewSignal) {
+      const items = readHistory();
+
+      items.unshift({
+        id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()),
+        symbol: symbol,
+        signal: signal,
+        entry: Number(data.price),
+        createdAt: Date.now(),
+        outcome: null
+      });
+
+      saveHistory(items);
+      renderHistory();
+    }
+
+    if(
+      (signal === "BUY" || signal === "SELL") &&
+      alerted[symbol] !== signal &&
+      data.tradePlan
+    ) {
+      try {
+        const telegramResponse = await fetch(
+          "/.netlify/functions/telegram-alert",
+          {
+            method: "POST",
+            headers: {"content-type": "application/json"},
+            body: JSON.stringify({
+              symbol: data.symbol,
+              signal: data.signal,
+              price: data.price,
+              tradePlan: data.tradePlan,
+              reason: data.reason
+            })
+          }
+        );
+
+        const telegramData = await telegramResponse.json();
+
+        if(!telegramResponse.ok) {
+          throw new Error(telegramData.error || "Telegram alert failed.");
+        }
+
+        alerted[symbol] = signal;
+        localStorage.setItem("vantage_alerted_signals", JSON.stringify(alerted));
+        $("telegramStatus").textContent = "Automatic Telegram alert sent successfully.";
+      } catch(error) {
+        $("telegramStatus").textContent = "Telegram alert failed: " + error.message;
+      }
+    }
+
+    await resolveMatured();
+
+  } catch(err) {
+    $("status").textContent = "DATA UNAVAILABLE";
+    $("signal").textContent = "— —";
+    $("signalSub").textContent = "No signal generated. Check API setup and try again.";
+    $("feedState").textContent = "Connection issue";
+    $("lastUpdate").textContent = err.message;
+    $("hint").textContent = err.message;
+
+  } finally {
+    busy = false;
+    scanBtn.disabled = false;
+    scanBtn.querySelector("strong").textContent = "ANALYZE MARKET";
+  }
+}
+
     await resolveMatured();
   }catch(err){
     $("status").textContent="DATA UNAVAILABLE"; $("signal").textContent="— —"; $("signalSub").textContent="No signal generated. Check API setup and try again.";
@@ -90,4 +193,7 @@ $("telegramAlertBtn").addEventListener("click",async()=>{
  }catch(e){$("telegramStatus").textContent=e.message;}
  finally{btn.disabled=false;}
 });
-renderHistory();resolveMatured();
+renderHistory();
+resolveMatured();
+analyze();
+setInterval(analyze, 60000);
