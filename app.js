@@ -2,7 +2,7 @@ const $ = (id) => document.getElementById(id);
 const asset = $("asset"), scanBtn = $("scanBtn");
 let countdown = 60, busy = false, latestSignal = null;
 const HISTORY_KEY = "vantage_ai_signal_history_v1";
-const TELEGRAM_URL = ""; // Optional: https://t.me/your_channel
+const TELEGRAM_URL = "https://t.me/VantageAIForexSignals";
 if (TELEGRAM_URL) $("telegramLink").href = TELEGRAM_URL;
 else $("telegramLink").addEventListener("click", e => { e.preventDefault(); $("hint").textContent = "Set your Telegram channel URL in app.js."; });
 
