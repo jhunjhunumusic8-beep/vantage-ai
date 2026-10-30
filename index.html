@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090b12">
+  <title>VANTAGE AI — Forex Signals</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
+  <main class="shell">
+    <header class="topbar">
+      <a class="brand" href="#"><span class="brand-mark">V</span><span>VANTAGE<span class="brand-ai"> AI</span><small>MARKET INTELLIGENCE</small></span></a>
+      <div class="top-right"><span class="live-dot"></span><span>MARKET DATA</span><span class="top-divider"></span><span id="clock">--:--:--</span></div>
+    </header>
+
+    <section class="hero">
+      <div class="eyebrow"><span class="eyebrow-line"></span> SMARTER MARKET DECISIONS</div>
+      <h1>Precision meets <span>possibility.</span></h1>
+      <p>Technical market analysis, delivered in a clear signal dashboard.</p>
+    </section>
+
+    <section class="dashboard">
+      <div class="panel control-panel">
+        <div class="panel-heading"><div><span class="overline">01 / MARKET</span><h2>Select an asset</h2></div><span class="pill">FOREX</span></div>
+        <label class="field-label" for="asset">TRADING PAIR</label>
+        <div class="select-wrap"><select id="asset">
+          <option value="AUD/USD">AUD / USD</option><option value="EUR/USD">EUR / USD</option>
+          <option value="GBP/USD">GBP / USD</option><option value="USD/JPY">USD / JPY</option>
+          <option value="USD/CHF">USD / CHF</option><option value="USD/CAD">USD / CAD</option>
+          <option value="NZD/USD">NZD / USD</option><option value="EUR/JPY">EUR / JPY</option>
+        </select><span>⌄</span></div>
+        <div class="control-foot"><span><i class="tiny-dot"></i> 1-minute candles</span><span>EMA + RSI strategy</span></div>
+      </div>
+
+      <div class="panel signal-panel" id="signalPanel">
+        <div class="signal-top"><span class="overline">02 / AI ANALYSIS</span><span class="status" id="status">AWAITING SCAN</span></div>
+        <div class="signal-main">
+          <div><div class="signal-label">CURRENT SIGNAL</div><div class="signal-word" id="signal">— —</div><div class="signal-sub" id="signalSub">Run an analysis to inspect market conditions</div></div>
+          <div class="signal-orb" id="signalOrb"><span>V</span></div>
+        </div>
+        <div class="metrics">
+          <div><span>LIVE PRICE</span><strong id="price">—</strong></div>
+          <div><span>RSI (14)</span><strong id="rsi">—</strong></div>
+          <div><span>EMA TREND</span><strong id="trend">—</strong></div>
+        </div>
+        <div class="meter"><div id="meterFill"></div></div>
+        <div class="meter-label"><span>SETUP STRENGTH</span><strong id="strength">—</strong></div>
+      </div>
+
+      <div class="action-panel">
+        <div class="timer-card"><div><span class="overline">NEXT SCAN WINDOW</span><strong id="timer">01:00</strong></div><div class="timer-icon">◷</div></div>
+        <button id="scanBtn" class="scan-btn"><span class="btn-kicker">ACTION</span><strong>ANALYZE MARKET</strong><span class="btn-arrow">↗</span></button>
+        <p class="hint" id="hint">Connect your market-data key in Netlify to start.</p>
+      </div>
+
+      <aside class="side-panel">
+        <div class="side-title"><span class="overline">03 / STRATEGY NOTES</span><span class="mini-icon">✳</span></div>
+        <div class="note-row"><span class="note-icon green">↗</span><div><strong>BUY condition</strong><small>EMA 9 above EMA 21, RSI confirms momentum.</small></div></div>
+        <div class="note-row"><span class="note-icon red">↘</span><div><strong>SELL condition</strong><small>EMA 9 below EMA 21, RSI confirms downside.</small></div></div>
+        <div class="note-row"><span class="note-icon muted">Ⅱ</span><div><strong>WAIT condition</strong><small>Mixed or weak conditions. No forced trade.</small></div></div>
+        <div class="disclaimer"><span>ⓘ</span><p>Signals are rule-based analysis, not financial advice. Forex trading carries substantial risk. No win rate or profit is guaranteed.</p></div>
+      </aside>
+    </section>
+
+    <section class="bottom-grid">
+      <div class="bottom-card"><div class="bottom-head"><span class="overline">DATA FEED</span><span class="feed-badge"><i></i> API CONNECTION</span></div><strong id="feedState">Not connected</strong><small id="lastUpdate">Waiting for first request</small></div>
+      <div class="bottom-card"><div class="bottom-head"><span class="overline">SIGNAL LOG</span><span class="log-count" id="logCount">0 entries</span></div><div id="logList" class="log-list"><span class="empty-log">Your recent analyses will appear here.</span></div></div>
+      <div class="bottom-card telegram-card"><div class="bottom-head"><span class="overline">COMMUNITY</span><span class="mini-icon">↗</span></div><strong>Trade with a plan.</strong><small>Add your Telegram channel link in <code>app.js</code>.</small><a id="telegramLink" href="#" target="_blank" rel="noopener">JOIN TELEGRAM <span>↗</span></a></div>
+    </section>
+    <footer><span>VANTAGE AI <b>•</b> MARKET ANALYSIS TERMINAL</span><span>DATA MAY BE DELAYED DEPENDING ON YOUR PROVIDER PLAN</span></footer>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>
