@@ -182,15 +182,19 @@ async function analyze(){
       }
     }
 
-    await resolveMatured();
 
   } catch(err) {
-    $("status").textContent = "DATA UNAVAILABLE";
+    const rateLimited = /run out of API credits|API credits|current limit|rate limit|too many requests/i.test(err.message);
+    $("status").textContent = rateLimited ? "API LIMIT REACHED" : "DATA UNAVAILABLE";
     $("signal").textContent = "— —";
-    $("signalSub").textContent = "No signal generated. Check API setup and try again.";
-    $("feedState").textContent = "Connection issue";
+    $("signalSub").textContent = rateLimited
+      ? "Twelve Data minute limit reached. Wait at least 60 seconds, then retry manually."
+      : "No signal generated. Check API setup and try again.";
+    $("feedState").textContent = rateLimited ? "Rate limited" : "Connection issue";
     $("lastUpdate").textContent = err.message;
-    $("hint").textContent = err.message;
+    $("hint").textContent = rateLimited
+      ? "API limit reached — wait 60 seconds before trying again."
+      : err.message;
 
   } finally {
     busy = false;
@@ -213,6 +217,3 @@ $("telegramAlertBtn").addEventListener("click",async()=>{
  finally{btn.disabled=false;}
 });
 renderHistory();
-resolveMatured();
-analyze();
-setInterval(analyze, 60000);
