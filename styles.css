@@ -51,3 +51,45 @@
 /* Expanded performance metrics */
 .accuracy-summary{grid-template-columns:repeat(2,minmax(0,1fr))}
 @media(min-width:1100px){.accuracy-summary{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+
+/* Public signals-only layout */
+.side-panel,
+.timer-card,
+.market-detail-grid,
+.upgrade-grid > .bottom-card:nth-child(2),
+.upgrade-grid > .bottom-card:nth-child(3) {
+  display: none !important;
+}
+.dashboard {
+  grid-template-columns: minmax(220px, .8fr) minmax(300px, 1.5fr) minmax(170px, .65fr);
+}
+.bottom-grid {
+  grid-template-columns: 1fr;
+}
+.bottom-grid > .bottom-card:not(.telegram-card) {
+  display: none;
+}
+.upgrade-grid {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.secondary-btn,
+#telegramStatus {
+  display: none !important;
+}
+.telegram-card {
+  max-width: 720px;
+  width: 100%;
+  margin: 0 auto;
+}
+@media (max-width: 900px) {
+  .dashboard { grid-template-columns: 1fr 1.2fr; }
+  .action-panel { grid-column: 1 / -1; }
+}
+@media (max-width: 620px) {
+  .dashboard { grid-template-columns: 1fr; }
+  .action-panel { grid-column: auto; }
+}
