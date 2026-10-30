@@ -174,12 +174,6 @@ async function analyze(){
   }
 }
 
-    await resolveMatured();
-  }catch(err){
-    $("status").textContent="DATA UNAVAILABLE"; $("signal").textContent="— —"; $("signalSub").textContent="No signal generated. Check API setup and try again.";
-    $("feedState").textContent="Connection issue"; $("lastUpdate").textContent=err.message; $("hint").textContent=err.message;
-  }finally{busy=false;scanBtn.disabled=false;scanBtn.querySelector("strong").textContent="ANALYZE MARKET";}
-}
 scanBtn.addEventListener("click",analyze);
 asset.addEventListener("change",()=>{$("signal").textContent="— —";$("signalSub").textContent="Asset changed. Run a fresh analysis.";$("status").textContent="AWAITING SCAN";["price","rsi","trend","strength"].forEach(id=>$(id).textContent="—");$("meterFill").style.width="0";latestSignal=null;renderLevels({});});
 $("clearHistoryBtn").addEventListener("click",()=>{if(confirm("Clear signal history stored in this browser?")){saveHistory([]);renderHistory();}});
