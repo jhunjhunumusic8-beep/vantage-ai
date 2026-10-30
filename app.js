@@ -18,10 +18,14 @@ function renderHistory(){
   const items=readHistory(), list=$("historyList");
   if(!items.length){list.innerHTML='<span class="empty-log">No saved signals yet.</span>';}
   else list.innerHTML=items.slice(0,12).map(x=>`<div class="history-row"><div><b class="${x.signal.toLowerCase()}">${x.signal}</b><span>${x.symbol} · ${new Date(x.createdAt).toLocaleString()}</span></div><strong>${x.outcome||"PENDING"}</strong></div>`).join("");
-  const done=items.filter(x=>x.outcome==="WIN"||x.outcome==="LOSS"), wins=done.filter(x=>x.outcome==="WIN").length, losses=done.length-wins;
+  const done=items.filter(x=>x.outcome==="WIN"||x.outcome==="LOSS"||x.outcome==="FLAT");
+  const wins=done.filter(x=>x.outcome==="WIN").length, losses=done.filter(x=>x.outcome==="LOSS").length;
+  const pending=items.filter(x=>!x.outcome).length, winRateCount=wins+losses;
   $("wins").textContent=wins; $("losses").textContent=losses; $("resolved").textContent=done.length;
-  $("winRate").textContent=done.length?`${Math.round(wins/done.length*100)}%`:"—";
-  $("accuracyFill").style.width=done.length?`${wins/done.length*100}%`:"0%";
+  $("pendingSignals").textContent=pending;
+  $("avgPips").textContent=done.length?`${(done.reduce((sum,x)=>sum+(Number(x.pips)||0),0)/done.length).toFixed(1)} pips`:"—";
+  $("winRate").textContent=winRateCount?`${Math.round(wins/winRateCount*100)}%`:"—";
+  $("accuracyFill").style.width=winRateCount?`${wins/winRateCount*100}%`:"0%";
 }
 function renderLevels(data){
   const p=data.tradePlan;
@@ -71,7 +75,10 @@ async function resolveMatured(){
       const r=await fetch(`/.netlify/functions/signal?symbol=${encodeURIComponent(item.symbol)}`);
       const d=await r.json(); if(!r.ok||!Number.isFinite(Number(d.price))) continue;
       const delta=Number(d.price)-item.entry;
-      item.outcome=(item.signal==="BUY" ? delta>0 : delta<0)?"WIN":(delta===0?"FLAT":"LOSS");
+      const pipSize=item.symbol.includes("JPY")?0.01:0.0001;
+      const signedMove=item.signal==="BUY"?delta:-delta;
+      item.pips=Number((signedMove/pipSize).toFixed(1));
+      item.outcome=signedMove>0?"WIN":(signedMove===0?"FLAT":"LOSS");
       item.exitPrice=Number(d.price); item.resolvedAt=now; changed=true;
     }catch{}
   }
@@ -132,7 +139,8 @@ async function analyze(){
         signal: signal,
         entry: Number(data.price),
         createdAt: Date.now(),
-        outcome: null
+        outcome: null,
+        pips: null
       });
 
       saveHistory(items);
