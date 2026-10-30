@@ -47,3 +47,7 @@
 .ohlc-table th:first-child,.ohlc-table td:first-child{text-align:left}
 .ohlc-note{display:block;margin-top:12px;line-height:1.5}
 @media(max-width:760px){.market-detail-grid{grid-template-columns:1fr}}
+
+/* Expanded performance metrics */
+.accuracy-summary{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media(min-width:1100px){.accuracy-summary{grid-template-columns:repeat(3,minmax(0,1fr))}}
