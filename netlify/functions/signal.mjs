@@ -159,6 +159,11 @@ export default async (request) => {
       tradePlan, candles: oneMinute.slice(-40), provider: "Twelve Data"
     }), { status: 200, headers });
   } catch (error) {
-    return new Response(JSON.stringify({ error: error.message || "Market data request failed. Try again shortly." }), { status: 502, headers });
+    const message = error.message || "Market data request failed. Try again shortly.";
+    const rateLimited = /run out of API credits|API credits|current limit|rate limit|too many requests/i.test(message);
+    return new Response(JSON.stringify({
+      error: rateLimited ? "Twelve Data API minute limit reached. Wait 60 seconds and try again." : message,
+      code: rateLimited ? "RATE_LIMITED" : "MARKET_DATA_ERROR"
+    }), { status: rateLimited ? 429 : 502, headers });
   }
 };
