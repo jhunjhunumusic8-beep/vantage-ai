@@ -67,6 +67,20 @@
       </aside>
     </section>
 
+    <section class="market-detail-grid">
+      <div class="bottom-card chart-card">
+        <div class="bottom-head"><span class="overline">LIVE PRICE CHART</span><span class="feed-badge" id="chartPair">WAITING FOR DATA</span></div>
+        <div class="chart-summary"><strong id="chartLastPrice">—</strong><span id="chartChange">Last 40 one-minute candles</span></div>
+        <div id="priceChart" class="price-chart"><span class="empty-log">Run analysis to load the live chart.</span></div>
+        <div class="chart-axis"><span>OLDER</span><span>NEWER</span></div>
+      </div>
+      <div class="bottom-card candles-card">
+        <div class="bottom-head"><span class="overline">RECENT OHLC DATA</span><span class="log-count">1-MIN</span></div>
+        <div class="ohlc-wrap"><table class="ohlc-table"><thead><tr><th>TIME</th><th>OPEN</th><th>HIGH</th><th>LOW</th><th>CLOSE</th></tr></thead><tbody id="ohlcRows"><tr><td colspan="5" class="empty-log">Waiting for market data</td></tr></tbody></table></div>
+        <small class="ohlc-note">Values supplied by Twelve Data for the selected pair. Times are UTC.</small>
+      </div>
+    </section>
+
     <section class="bottom-grid">
       <div class="bottom-card"><div class="bottom-head"><span class="overline">DATA FEED</span><span class="feed-badge"><i></i> API CONNECTION</span></div><strong id="feedState">Not connected</strong><small id="lastUpdate">Waiting for first request</small></div>
       <div class="bottom-card"><div class="bottom-head"><span class="overline">SIGNAL LOG</span><span class="log-count" id="logCount">0 entries</span></div><div id="logList" class="log-list"><span class="empty-log">Your recent analyses will appear here.</span></div></div>

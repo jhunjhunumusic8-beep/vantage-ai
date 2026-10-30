@@ -36,6 +36,6 @@ export default async (request)=>{
    const risk=vol*1.5,dir=signal==="BUY"?1:-1;
    tradePlan={entry:last,stopLoss:last-dir*risk,takeProfit1:last+dir*risk,takeProfit2:last+dir*risk*2,takeProfit3:last+dir*risk*3,riskReward:"1:1 / 1:2 / 1:3"};
   }
-  return new Response(JSON.stringify({symbol,signal,reason,price:last,rsi:momentum,trend:up?"BULLISH":down?"BEARISH":"FLAT",strength,candleTime:candles.at(-1).time,interval:"1-minute",indicators:{ema9:fast,ema21:slow,atr14:vol},tradePlan,provider:"Twelve Data"}),{status:200,headers});
+  return new Response(JSON.stringify({symbol,signal,reason,price:last,rsi:momentum,trend:up?"BULLISH":down?"BEARISH":"FLAT",strength,candleTime:candles.at(-1).time,interval:"1-minute",indicators:{ema9:fast,ema21:slow,atr14:vol},tradePlan,candles:candles.slice(-40),provider:"Twelve Data"}),{status:200,headers});
  }catch{return new Response(JSON.stringify({error:"Market data request failed. Try again shortly."}),{status:502,headers});}
 };

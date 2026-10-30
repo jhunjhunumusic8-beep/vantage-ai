@@ -30,6 +30,23 @@ function renderLevels(data){
   $("takeProfit3").textContent=p?fmt(p.takeProfit3):"—"; $("riskReward").textContent=p?`1 : ${p.riskReward}`:"—";
   $("telegramAlertBtn").disabled=!p;
 }
+function renderMarketData(data){
+  const candles=Array.isArray(data.candles)?data.candles.slice(-40):[];
+  $("chartPair").textContent=data.symbol+" · 1 MIN";
+  $("chartLastPrice").textContent=fmt(data.price);
+  if(candles.length<2){
+    $("priceChart").innerHTML='<span class="empty-log">Chart data is not available yet.</span>';
+    $("ohlcRows").innerHTML='<tr><td colspan="5" class="empty-log">No candle rows available</td></tr>';
+    return;
+  }
+  const values=candles.map(c=>Number(c.close)).filter(Number.isFinite);
+  const min=Math.min(...values),max=Math.max(...values),range=max-min||Math.abs(max)*0.00001||1;
+  const points=values.map((v,i)=>`${(i/(values.length-1))*1000},${(92-((v-min)/range)*78).toFixed(2)}`).join(" ");
+  const first=values[0],last=values[values.length-1],change=first?((last-first)/first*100):0;
+  $("chartChange").textContent=`${change>=0?"+":""}${change.toFixed(3)}% across ${values.length} candles`;
+  $("priceChart").innerHTML=`<svg viewBox="0 0 1000 110" role="img" aria-label="Recent ${data.symbol} price movement"><line x1="0" y1="14" x2="1000" y2="14" class="chart-gridline"/><line x1="0" y1="53" x2="1000" y2="53" class="chart-gridline"/><line x1="0" y1="92" x2="1000" y2="92" class="chart-gridline"/><polyline points="${points}" class="chart-line" /></svg>`;
+  $("ohlcRows").innerHTML=candles.slice(-6).reverse().map(c=>`<tr><td>${String(c.time||"").slice(11,16)}</td><td>${fmt(Number(c.open))}</td><td>${fmt(Number(c.high))}</td><td>${fmt(Number(c.low))}</td><td>${fmt(Number(c.close))}</td></tr>`).join("");
+}
 function setSignal(type,data){
   const panel=$("signalPanel"), orb=$("signalOrb");
   panel.dataset.signal=type; orb.className="signal-orb";
@@ -44,7 +61,7 @@ function setSignal(type,data){
   chip.textContent=`${data.symbol} ${type} · ${new Date().toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"})}`;
   const list=$("logList"); if(list.querySelector(".empty-log")) list.innerHTML="";
   list.prepend(chip); while(list.children.length>4) list.lastChild.remove(); $("logCount").textContent=`${list.children.length} entries`;
-  latestSignal=data; renderLevels(data);
+  latestSignal=data; renderLevels(data); renderMarketData(data);
 }
 async function resolveMatured(){
   const items=readHistory(), now=Date.now(); let changed=false;
@@ -174,12 +191,6 @@ async function analyze(){
   }
 }
 
-    await resolveMatured();
-  }catch(err){
-    $("status").textContent="DATA UNAVAILABLE"; $("signal").textContent="— —"; $("signalSub").textContent="No signal generated. Check API setup and try again.";
-    $("feedState").textContent="Connection issue"; $("lastUpdate").textContent=err.message; $("hint").textContent=err.message;
-  }finally{busy=false;scanBtn.disabled=false;scanBtn.querySelector("strong").textContent="ANALYZE MARKET";}
-}
 scanBtn.addEventListener("click",analyze);
 asset.addEventListener("change",()=>{$("signal").textContent="— —";$("signalSub").textContent="Asset changed. Run a fresh analysis.";$("status").textContent="AWAITING SCAN";["price","rsi","trend","strength"].forEach(id=>$(id).textContent="—");$("meterFill").style.width="0";latestSignal=null;renderLevels({});});
 $("clearHistoryBtn").addEventListener("click",()=>{if(confirm("Clear signal history stored in this browser?")){saveHistory([]);renderHistory();}});
